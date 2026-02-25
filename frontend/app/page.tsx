@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from 'react';
 
-const API_URL = 'http://localhost:5089/api/prompts';
+const API_URL = process.env.NEXT_PUBLIC_API_URL
+    ? `${process.env.NEXT_PUBLIC_API_URL}/api/prompts`
+    : 'http://localhost:5089/api/prompts';
 
 interface PromptJob {
   id: string;

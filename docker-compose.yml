@@ -26,9 +26,20 @@ services:
       RabbitMQ__Host: rabbitmq
       RabbitMQ__Username: guest
       RabbitMQ__Password: guest
-      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      Anthropic__ApiKey: ${ANTHROPIC_API_KEY}
     ports:
       - "8080:8080"
     depends_on:
       - postgres
       - rabbitmq
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8080
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
