@@ -16,38 +16,42 @@ PromptJobConsumer → picks up message → calls Claude API → updates status
 Frontend → polls GET /api/prompts every 3s → displays live status
 ```
 
-## Prerequisites
+## Quick Start (Docker)
 
-- Docker Desktop
-- .NET 9 SDK
-- Node.js 18+
-
-## Quick Start
+**Requirements:** Docker Desktop
 
 1. Clone the repository
-2. Create `.env` file in the root:
+2. Create a `.env` file in the root directory:
 ```
 ANTHROPIC_API_KEY=your_api_key_here
 ```
+3. Start everything:
+```bash
+docker-compose up
+```
+4. Open http://localhost:3000
 
-3. Start infrastructure:
+This single command starts PostgreSQL, RabbitMQ, the backend API, and the frontend.
+
+## Manual Setup (Alternative)
+
+**Requirements:** .NET 9 SDK, Node.js 18+, Docker Desktop (for infrastructure only)
+
+1. Start infrastructure:
 ```bash
 docker-compose up postgres rabbitmq -d
 ```
-
-4. Start backend:
+2. Start backend:
 ```bash
 dotnet run --project src/PromptProcessor.API
 ```
-
-5. Start frontend:
+3. Start frontend:
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
-
-6. Open http://localhost:3000
+4. Open http://localhost:3000
 
 ## API Endpoints
 
