@@ -19,6 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\PromptProcessor.Domain\PromptProcessor.Domain.csproj" />
     <ProjectReference Include="..\PromptProcessor.Infrastructure\PromptProcessor.Infrastructure.csproj" />
+    <ProjectReference Include="..\PromptProcessor.Application\PromptProcessor.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>

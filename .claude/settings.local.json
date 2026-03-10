@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd D:/Fork/prompt-processor && dotnet new classlib -n PromptProcessor.Application -f net9.0 -o src/PromptProcessor.Application --force 2>&1)",
+      "Bash(cd D:/Fork/prompt-processor && dotnet sln add src/PromptProcessor.Application/PromptProcessor.Application.csproj --solution-folder src 2>&1)",
+      "Bash(cd D:/Fork/prompt-processor && rm src/PromptProcessor.Application/Class1.cs && dotnet add src/PromptProcessor.Application/PromptProcessor.Application.csproj reference src/PromptProcessor.Domain/PromptProcessor.Domain.csproj 2>&1)",
+      "Bash(cd D:/Fork/prompt-processor && dotnet add src/PromptProcessor.Infrastructure/PromptProcessor.Infrastructure.csproj reference src/PromptProcessor.Application/PromptProcessor.Application.csproj 2>&1 && dotnet add src/PromptProcessor.API/PromptProcessor.API.csproj reference src/PromptProcessor.Application/PromptProcessor.Application.csproj 2>&1)",
+      "Bash(cd D:/Fork/prompt-processor && dotnet add src/PromptProcessor.Application/PromptProcessor.Application.csproj package MediatR --version 12.4.1 2>&1 && dotnet add src/PromptProcessor.Application/PromptProcessor.Application.csproj package FluentValidation --version 11.11.0 2>&1 && dotnet add src/PromptProcessor.Application/PromptProcessor.Application.csproj package FluentValidation.DependencyInjectionExtensions --version 11.11.0 2>&1 && dotnet add src/PromptProcessor.Application/PromptProcessor.Application.csproj package Microsoft.Extensions.DependencyInjection.Abstractions 2>&1)",
+      "Bash(cd D:/Fork/prompt-processor && dotnet add src/PromptProcessor.Application/PromptProcessor.Application.csproj package MassTransit --version 8.3.6 2>&1 | tail -5)",
+      "Bash(cd D:/Fork/prompt-processor && dotnet build 2>&1 | tail -10)"
+    ]
+  }
+}
