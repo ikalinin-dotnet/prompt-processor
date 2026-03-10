@@ -31,9 +31,7 @@ public class PromptJobRepository : IPromptJobRepository
 
     public async Task<PromptJob?> GetByIdAsync(Guid id)
     {
-        return await _context.PromptJobs
-            .AsNoTracking()
-            .FirstOrDefaultAsync(j => j.Id == id);
+        return await _context.PromptJobs.FindAsync(id);
     }
 
     public async Task UpdateAsync(PromptJob job)
