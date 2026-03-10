@@ -1,6 +1,7 @@
 using PromptProcessor.Application;
 using PromptProcessor.Infrastructure;
 using PromptProcessor.Infrastructure.Data;
+using PromptProcessor.API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,7 +31,7 @@ var app = builder.Build();
 app.UseExceptionHandling();
 app.UseCors();
 
-DependencyInjection.ApplyMigrations(app.Services);
+PromptProcessor.Infrastructure.DependencyInjection.ApplyMigrations(app.Services);
 
 app.UseSwagger();
 app.UseSwaggerUI();

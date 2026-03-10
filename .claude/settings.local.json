@@ -9,7 +9,8 @@
       "Bash(cd D:/Fork/prompt-processor && dotnet add src/PromptProcessor.Application/PromptProcessor.Application.csproj package MassTransit --version 8.3.6 2>&1 | tail -5)",
       "Bash(cd D:/Fork/prompt-processor && dotnet build 2>&1 | tail -10)",
       "Bash(cd D:/Fork/prompt-processor && dotnet build 2>&1 | grep -E \"\\(error|warning|Error|Warning|succeeded|failed\\)\")",
-      "Bash(cd D:/Fork/prompt-processor && dotnet build 2>&1 | grep -E \"\\(error|Error|succeeded|failed\\)\" | head -20)"
+      "Bash(cd D:/Fork/prompt-processor && dotnet build 2>&1 | grep -E \"\\(error|Error|succeeded|failed\\)\" | head -20)",
+      "Bash(cd D:/Fork/prompt-processor && dotnet ef migrations add InitialCreate --project src/PromptProcessor.Infrastructure --startup-project src/PromptProcessor.API --context PromptProcessor.Infrastructure.Data.AppDbContext 2>&1)"
     ]
   }
 }
