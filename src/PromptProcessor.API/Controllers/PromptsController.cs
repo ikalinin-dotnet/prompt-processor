@@ -1,7 +1,8 @@
-﻿using MassTransit;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using PromptProcessor.Domain;
-using PromptProcessor.Domain.Messages;
+using PromptProcessor.Application.Commands.SubmitPrompt;
+using PromptProcessor.Application.Queries.GetAllPrompts;
+using PromptProcessor.Application.Queries.GetPromptById;
 
 namespace PromptProcessor.API.Controllers;
 
@@ -9,51 +10,32 @@ namespace PromptProcessor.API.Controllers;
 [Route("api/[controller]")]
 public class PromptsController : ControllerBase
 {
-    private readonly IPromptJobRepository _repository;
-    private readonly IPublishEndpoint _publishEndpoint;
+    private readonly ISender _sender;
 
-    public PromptsController(IPromptJobRepository repository, IPublishEndpoint publishEndpoint)
+    public PromptsController(ISender sender)
     {
-        _repository = repository;
-        _publishEndpoint = publishEndpoint;
+        _sender = sender;
     }
 
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreatePromptRequest request)
     {
-        var job = new PromptJob()
-        {
-            Id = Guid.NewGuid(),
-            Prompt = request.Prompt,
-            Status = PromptStatus.Pending,
-            CreatedAt = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Utc),
-            UpdatedAt = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Utc)
-        };
-        
-        await _repository.CreateAsync(job);
-        await _publishEndpoint.Publish(new PromptJobCreated(job.Id));
-        
-        return CreatedAtAction(nameof(GetById), new { id = job.Id }, job);
+        var dto = await _sender.Send(new SubmitPromptCommand(request.Prompt));
+        return CreatedAtAction(nameof(GetById), new { id = dto.Id }, dto);
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var jobs = await _repository.GetAllAsync();
-        return Ok(jobs);
+        var dtos = await _sender.Send(new GetAllPromptsQuery());
+        return Ok(dtos);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(Guid id)
     {
-        var job = await _repository.GetByIdAsync(id);
-
-        if (job is null)
-        {
-            return NotFound();
-        }
-        
-        return Ok(job);
+        var dto = await _sender.Send(new GetPromptByIdQuery(id));
+        return Ok(dto);
     }
 }
 

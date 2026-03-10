@@ -1,7 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using PromptProcessor.Domain;
+using PromptProcessor.Infrastructure.Data;
 
-namespace PromptProcessor.Infrastructure;
+namespace PromptProcessor.Infrastructure.Repositories;
 
 public class PromptJobRepository : IPromptJobRepository
 {
@@ -11,7 +12,7 @@ public class PromptJobRepository : IPromptJobRepository
     {
         _context = context;
     }
-    
+
     public async Task<PromptJob> CreateAsync(PromptJob job)
     {
         ArgumentNullException.ThrowIfNull(job);
@@ -22,18 +23,22 @@ public class PromptJobRepository : IPromptJobRepository
 
     public async Task<IEnumerable<PromptJob>> GetAllAsync()
     {
-        return await _context.PromptJobs.OrderByDescending(j => j.CreatedAt).ToListAsync();
+        return await _context.PromptJobs
+            .AsNoTracking()
+            .OrderByDescending(j => j.CreatedAt)
+            .ToListAsync();
     }
 
     public async Task<PromptJob?> GetByIdAsync(Guid id)
     {
-        return await _context.PromptJobs.FindAsync(id);
+        return await _context.PromptJobs
+            .AsNoTracking()
+            .FirstOrDefaultAsync(j => j.Id == id);
     }
 
     public async Task UpdateAsync(PromptJob job)
     {
         ArgumentNullException.ThrowIfNull(job);
-        job.UpdatedAt = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Utc);
         _context.PromptJobs.Update(job);
         await _context.SaveChangesAsync();
     }

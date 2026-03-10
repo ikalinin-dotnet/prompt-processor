@@ -1,13 +1,9 @@
-using Anthropic.SDK;
-using MassTransit;
-using Microsoft.EntityFrameworkCore;
-using PromptProcessor.Domain;
+using PromptProcessor.Application;
 using PromptProcessor.Infrastructure;
-using PromptProcessor.Infrastructure.Consumers;
+using PromptProcessor.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//Services
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
@@ -16,32 +12,8 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//Database
-builder.Services.AddDbContext<AppDbContext>(options => 
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-//Repository
-builder.Services.AddScoped<IPromptJobRepository, PromptJobRepository>();
-
-//LLM - Anthropic
-builder.Services.AddSingleton(new AnthropicClient(new APIAuthentication(builder.Configuration["Anthropic:ApiKey"])));
-
-//MassTransit + RabbitMQ
-builder.Services.AddMassTransit(x =>
-{
-    x.AddConsumer<PromptJobConsumer>();
-
-    x.UsingRabbitMq((ctx, cfg) =>
-    {
-        cfg.Host(builder.Configuration["RabbitMQ:Host"] ?? "localhost", "/", h =>
-        {
-            h.Username(builder.Configuration["RabbitMQ:Username"] ?? "guest");
-            h.Password(builder.Configuration["RabbitMQ:Password"] ?? "guest");
-        });
-
-        cfg.ConfigureEndpoints(ctx);
-    });
-});
+builder.Services.AddApplication();
+builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddCors(options =>
 {
@@ -54,14 +26,11 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+app.UseExceptionHandling();
 app.UseCors();
 
-//Auto-migrate on startup 
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.Migrate();
-}
+DependencyInjection.ApplyMigrations(app.Services);
 
 app.UseSwagger();
 app.UseSwaggerUI();
