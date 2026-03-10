@@ -10,10 +10,24 @@ A system for submitting prompts to Claude AI and tracking their processing statu
 - **Frontend**: Next.js 16, TypeScript, Tailwind CSS
 
 ## Architecture
+
 ```
-POST /api/prompts → saves to DB (Pending) → publishes to RabbitMQ
-PromptJobConsumer → picks up message → calls Claude API → updates status
+POST /api/prompts → SubmitPromptCommand (MediatR) → saves to DB (Pending) → publishes to RabbitMQ
+PromptJobConsumer → picks up message → calls ILlmService (Claude API) → updates status via domain methods
 Frontend → polls GET /api/prompts every 3s → displays live status
+```
+
+### Project Structure
+
+```
+src/
+├── PromptProcessor.Domain/          # Entities, interfaces, domain exceptions
+├── PromptProcessor.Application/     # MediatR commands/queries, DTOs, validators, pipeline behaviors
+├── PromptProcessor.Infrastructure/  # EF Core, repository, Anthropic client, MassTransit consumer
+└── PromptProcessor.API/             # Controllers, exception middleware, Program.cs
+
+tests/
+└── PromptProcessor.Tests/           # Domain, application, and validator tests (xUnit)
 ```
 
 ## Quick Start (Docker)
@@ -53,6 +67,12 @@ npm run dev
 ```
 4. Open http://localhost:3000
 
+## Running Tests
+
+```bash
+dotnet test
+```
+
 ## API Endpoints
 
 | Method | Endpoint | Description |
@@ -60,6 +80,8 @@ npm run dev
 | POST | /api/prompts | Submit a new prompt |
 | GET | /api/prompts | Get all prompts with status |
 | GET | /api/prompts/{id} | Get prompt by ID |
+
+Errors are returned as `ProblemDetails` (RFC 9110). Validation failures return HTTP 400 with field-level error details.
 
 ## Prompt Status Lifecycle
 

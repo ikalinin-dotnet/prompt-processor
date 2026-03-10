@@ -14,7 +14,8 @@
       "Bash(cd D:/Fork/prompt-processor && dotnet new xunit -n PromptProcessor.Tests -f net9.0 -o tests/PromptProcessor.Tests 2>&1 | tail -5)",
       "Bash(cd D:/Fork/prompt-processor && dotnet sln add tests/PromptProcessor.Tests/PromptProcessor.Tests.csproj 2>&1)",
       "Bash(cd D:/Fork/prompt-processor && rm tests/PromptProcessor.Tests/UnitTest1.cs && dotnet add tests/PromptProcessor.Tests/PromptProcessor.Tests.csproj reference src/PromptProcessor.Domain/PromptProcessor.Domain.csproj src/PromptProcessor.Application/PromptProcessor.Application.csproj src/PromptProcessor.Infrastructure/PromptProcessor.Infrastructure.csproj 2>&1 | tail -5)",
-      "Bash(cd D:/Fork/prompt-processor && dotnet add tests/PromptProcessor.Tests/PromptProcessor.Tests.csproj package NSubstitute --version 5.3.0 2>&1 | tail -3 && dotnet add tests/PromptProcessor.Tests/PromptProcessor.Tests.csproj package FluentAssertions --version 8.2.0 2>&1 | tail -3 && dotnet add tests/PromptProcessor.Tests/PromptProcessor.Tests.csproj package MassTransit.Testing --version 8.3.6 2>&1 | tail -3)"
+      "Bash(cd D:/Fork/prompt-processor && dotnet add tests/PromptProcessor.Tests/PromptProcessor.Tests.csproj package NSubstitute --version 5.3.0 2>&1 | tail -3 && dotnet add tests/PromptProcessor.Tests/PromptProcessor.Tests.csproj package FluentAssertions --version 8.2.0 2>&1 | tail -3 && dotnet add tests/PromptProcessor.Tests/PromptProcessor.Tests.csproj package MassTransit.Testing --version 8.3.6 2>&1 | tail -3)",
+      "Bash(cd D:/Fork/prompt-processor && dotnet test --no-build 2>&1)"
     ]
   }
 }
